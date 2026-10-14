@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-paper: #ffffff;
+  --color-ink: #111111;
+  --color-mist: #f4f4f4;
+  --color-line: #e6e3df;
+  --color-taupe: #a39383;
+  --color-gold: #b8975a;
+
+  --font-serif: var(--font-cormorant), "Playfair Display", Georgia, serif;
+  --font-sans: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+  ::selection {
+    @apply bg-ink text-paper;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@utility eyebrow {
+  @apply text-[11px] uppercase tracking-[0.3em] text-taupe;
+}
+
+@utility btn-base {
+  @apply inline-flex items-center justify-center gap-3 px-8 py-4 text-[11px] uppercase tracking-[0.22em] transition-colors duration-300;
+}
+@utility btn-primary {
+  @apply btn-base bg-ink text-paper hover:bg-ink/85;
+}
+@utility btn-outline {
+  @apply btn-base border border-ink text-ink hover:bg-ink hover:text-paper;
+}
+@utility btn-light {
+  @apply btn-base bg-paper text-ink hover:bg-paper/85;
+}
+@utility btn-ghost-light {
+  @apply btn-base border border-paper/70 text-paper hover:bg-paper hover:text-ink;
+}
+
+/* Sottolineatura che si disegna da sinistra a destra */
+@utility link-underline {
+  position: relative;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  padding-bottom: 2px;
+  transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  &:hover {
+    background-size: 100% 1px;
+  }
+}
