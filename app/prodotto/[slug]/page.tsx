@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/product/ProductCard";
 import { ProductDetail } from "@/components/product/ProductDetail";
+import { RecentlyViewed } from "@/components/product/RecentlyViewed";
 import { getProductBySlug, getRelatedProducts, products } from "@/lib/data/products";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -37,6 +38,7 @@ export default async function ProductPage({ params }: Props) {
           ))}
         </div>
       </section>
+      <RecentlyViewed excludeId={product.id} />
     </>
   );
 }

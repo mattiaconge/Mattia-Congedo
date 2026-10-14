@@ -52,7 +52,7 @@ export function SearchOverlay() {
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Cerca abiti, cappotti, borse…"
+                placeholder="Cerca abiti, Vicolo, raffia…"
                 className="w-full bg-transparent font-serif text-3xl outline-none placeholder:text-ink/30 md:text-5xl"
                 aria-label="Cerca prodotti"
               />
@@ -65,7 +65,7 @@ export function SearchOverlay() {
                   {categories.map((c) => (
                     <button
                       key={c.slug}
-                      onClick={() => setQuery(c.slug)}
+                      onClick={() => setQuery(c.name.toLowerCase())}
                       className="border border-line px-4 py-2 text-[11px] uppercase tracking-[0.2em] transition-colors hover:border-ink"
                     >
                       {c.name}

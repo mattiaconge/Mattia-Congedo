@@ -5,6 +5,9 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { SearchOverlay } from "@/components/layout/SearchOverlay";
 import { SideMenu } from "@/components/layout/SideMenu";
+import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
+import { QuickView } from "@/components/product/QuickView";
+import { Toaster } from "@/components/ui/Toaster";
 import { ShopProvider } from "@/context/ShopContext";
 import "./globals.css";
 
@@ -28,7 +31,7 @@ export const metadata: Metadata = {
     template: "%s · Jackie O' Padova",
   },
   description:
-    "Jackie O' Padova: boutique di moda donna nel cuore di Padova. Abiti, capispalla, maglieria, borse, scarpe e accessori di tendenza.",
+    "Jackie O' Padova, Via Fiume 4: le ultime tendenze della moda donna ai prezzi migliori. Abiti, capi spalla, maglieria, jeans, gonne e accessori di Vicolo, Have One, Susy Mix, Kontatto, Imperial e Kaos.",
   openGraph: {
     type: "website",
     locale: "it_IT",
@@ -54,6 +57,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SideMenu />
           <SearchOverlay />
           <CartDrawer />
+          <QuickView />
+          <Toaster />
+          <WhatsAppFab />
         </ShopProvider>
       </body>
     </html>

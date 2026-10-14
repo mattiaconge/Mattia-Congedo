@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Heart, Menu, Search, ShoppingBag } from "lucide-react";
+import { motion } from "framer-motion";
 import { useShop } from "@/context/ShopContext";
 import { store } from "@/lib/data/store";
 import { formatPrice } from "@/lib/format";
@@ -30,7 +31,7 @@ export function Header() {
   return (
     <>
       <div className="bg-ink px-4 py-2 text-center text-[10px] uppercase tracking-[0.25em] text-paper md:text-[11px]">
-        Spedizione gratuita sopra {formatPrice(store.freeShippingThreshold)} · Resi entro 14 giorni
+        Spedizione gratuita sopra {formatPrice(store.freeShippingThreshold)} · Boutique in {store.address.street}, Padova
       </div>
       <header
         className={`sticky top-0 z-40 border-b transition-colors duration-500 ${
@@ -78,7 +79,7 @@ export function Header() {
               Cerca
             </button>
             <Link href="/wishlist" aria-label={`Wishlist (${wishlist.length})`} className="relative p-2">
-              <Heart className={iconClass} strokeWidth={1.25} />
+              <Heart className={`${iconClass} ${wishlist.length ? "fill-ink" : ""}`} strokeWidth={1.25} />
               {wishlist.length > 0 && <Badge count={wishlist.length} />}
             </Link>
             <button onClick={() => openPanel("cart")} aria-label={`Bag (${cartCount})`} className="relative -mr-2 p-2">
@@ -94,8 +95,14 @@ export function Header() {
 
 function Badge({ count }: { count: number }) {
   return (
-    <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-ink px-1 text-[9px] font-medium text-paper">
+    <motion.span
+      key={count}
+      initial={{ scale: 1.8 }}
+      animate={{ scale: 1 }}
+      transition={{ type: "spring", stiffness: 400, damping: 12 }}
+      className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-ink px-1 text-[9px] font-medium text-paper"
+    >
       {count}
-    </span>
+    </motion.span>
   );
 }

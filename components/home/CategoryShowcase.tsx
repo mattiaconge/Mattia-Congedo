@@ -12,6 +12,8 @@ const layout = [
   "lg:col-span-4 aspect-[4/5]",
   "lg:col-span-4 aspect-[4/5] lg:mt-16",
   "lg:col-span-4 aspect-[4/5]",
+  "lg:col-span-6 aspect-[4/5] lg:aspect-[16/10]",
+  "lg:col-span-6 aspect-[4/5] lg:aspect-[16/10]",
 ];
 
 export function CategoryShowcase() {
@@ -25,7 +27,7 @@ export function CategoryShowcase() {
           <Reveal
             key={c.slug}
             delay={(i % 3) * 0.08}
-            className={`${i === 0 ? "col-span-2" : ""} ${layout[i]} relative`}
+            className={`${i === 0 || i === categories.length - 1 ? "col-span-2" : ""} ${layout[i]} relative`}
           >
             <Link href={`/collezione?categoria=${c.slug}`} className="group absolute inset-0 block overflow-hidden bg-mist">
               <FashionImage

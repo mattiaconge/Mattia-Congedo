@@ -38,11 +38,22 @@ context/ShopContext.tsx    Bag + wishlist (persistite in localStorage) e stato d
 lib/data/                  Mock data: prodotti, categorie, dati boutique, hero, trend
 ```
 
+## Anteprima in un solo file
+
+```bash
+npm run preview:build   # crea preview/dist/jackie-o-anteprima.html
+```
+
+Un unico file HTML con tutto il sito navigabile (home, collezione con filtri, schede prodotto, vista rapida,
+wishlist, bag, ordine in 3 passaggi): si apre con un doppio clic, senza server e senza pubblicare nulla.
+Usa gli stessi componenti del sito Next.js, con un router a hash (`preview/`).
+
 ## Da personalizzare prima della pubblicazione
 
-- **`lib/data/store.ts`**: indirizzo, telefono, numero WhatsApp, email, orari e link social sono **segnaposto**.
-- **Immagini**: foto Unsplash dimostrative (`lib/data/*.ts`); sostituirle con shooting/lookbook della boutique. Se un'immagine non si carica viene mostrato un fondo neutro con monogramma.
+- **`lib/data/store.ts`**: contatti reali della boutique (Via Fiume 4). Gli **orari** sono discordanti tra le fonti online: confermarli.
+- **`lib/data/products.ts`**: articoli e prezzi reali presi da jackieoshop.it (da ricontrollare); taglie e descrizioni indicative.
+- **Immagini**: ancora foto Unsplash dimostrative (`lib/data/*.ts`): sostituirle con le foto reali dei capi e della boutique. Se un'immagine non si carica viene mostrato un fondo neutro con monogramma.
 - **Newsletter** (`components/layout/Footer.tsx`): la form valida l'email ma non invia dati; collegarla a Mailchimp / Brevo / Klaviyo.
 - **Instagram**: il feed è statico. Per il feed live usare la Instagram Graph API (token lato server) e sostituire `instagramPosts`.
-- **Checkout**: la bag genera un ordine precompilato via WhatsApp; il checkout online (es. Shopify Storefront API, Stripe) è predisposto come "presto disponibile".
+- **Checkout**: `/checkout` raccoglie i dati e invia l'ordine precompilato via WhatsApp o email; per il pagamento online collegare Stripe / PayPal.
 - **Testi legali** in `app/assistenza/page.tsx`.

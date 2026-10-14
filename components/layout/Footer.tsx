@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
-import { FacebookIcon, InstagramIcon, TikTokIcon, WhatsAppIcon } from "@/components/ui/SocialIcons";
+import { FacebookIcon, InstagramIcon, WhatsAppIcon } from "@/components/ui/SocialIcons";
 import { store, whatsappLink } from "@/lib/data/store";
 
 const columns = [
@@ -11,7 +11,7 @@ const columns = [
     title: "Assistenza",
     links: [
       { label: "Spedizioni", href: "/assistenza#spedizioni" },
-      { label: "Resi e cambi", href: "/assistenza#resi" },
+      { label: "Ordini via WhatsApp", href: "/assistenza#ordini" },
       { label: "FAQ", href: "/assistenza#faq" },
       { label: "Guida alle taglie", href: "/assistenza#taglie" },
     ],
@@ -28,9 +28,9 @@ const columns = [
   {
     title: "Legale",
     links: [
+      { label: "Termini e condizioni", href: "/assistenza#termini" },
       { label: "Privacy Policy", href: "/assistenza#privacy" },
-      { label: "Cookie Policy", href: "/assistenza#cookie" },
-      { label: "Termini di vendita", href: "/assistenza#termini" },
+      { label: "Contatti", href: "/assistenza#contatti" },
     ],
   },
 ];
@@ -109,12 +109,11 @@ export function Footer() {
 
         <div className="mt-20 flex flex-col-reverse items-start justify-between gap-8 border-t border-paper/15 pt-8 md:flex-row md:items-center">
           <p className="text-[11px] uppercase tracking-[0.2em] text-paper/40">
-            © {new Date().getFullYear()} {store.name} · {store.address.city}
+            © {new Date().getFullYear()} {store.name} · {store.legalName} · {store.address.street}, {store.address.city}
           </p>
           <div className="flex items-center gap-5">
             <a href={store.instagram.url} target="_blank" rel="noreferrer" aria-label="Instagram"><InstagramIcon className="h-5 w-5" /></a>
             <a href={store.facebook} target="_blank" rel="noreferrer" aria-label="Facebook"><FacebookIcon className="h-5 w-5" /></a>
-            <a href={store.tiktok} target="_blank" rel="noreferrer" aria-label="TikTok"><TikTokIcon className="h-5 w-5" /></a>
             <a href={whatsappLink()} target="_blank" rel="noreferrer" aria-label="WhatsApp"><WhatsAppIcon className="h-5 w-5" /></a>
           </div>
         </div>

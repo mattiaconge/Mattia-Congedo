@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Heart, Plus } from "lucide-react";
+import { Eye, Heart, Plus } from "lucide-react";
+import { motion } from "framer-motion";
 import { FashionImage } from "@/components/ui/FashionImage";
 import { useShop } from "@/context/ShopContext";
 import { getCategory } from "@/lib/data/categories";
@@ -20,14 +21,14 @@ export function ProductCard({
   priority = false,
   sizes = "(min-width:1024px) 25vw, 50vw",
 }: ProductCardProps) {
-  const { addToCart, toggleWishlist, isWishlisted } = useShop();
+  const { addToCart, toggleWishlist, isWishlisted, openQuickView } = useShop();
   const [quickOpen, setQuickOpen] = useState(false);
   const wished = isWishlisted(product.id);
   const href = `/prodotto/${product.slug}`;
   const oneSize = product.sizes.length === 1;
 
   const quickAdd = (size: string) => {
-    addToCart(product.id, size);
+    addToCart(product.id, size, false);
     setQuickOpen(false);
   };
 
@@ -58,13 +59,22 @@ export function ProductCard({
           </span>
         )}
 
-        <button
+        <motion.button
+          whileTap={{ scale: 0.75 }}
           onClick={() => toggleWishlist(product.id)}
           aria-label={wished ? "Rimuovi dalla wishlist" : "Aggiungi alla wishlist"}
           aria-pressed={wished}
           className="absolute right-2 top-2 p-2"
         >
           <Heart className={`h-[18px] w-[18px] transition-colors ${wished ? "fill-ink" : ""}`} strokeWidth={1.25} />
+        </motion.button>
+
+        <button
+          onClick={() => openQuickView(product.id)}
+          aria-label={`Vista rapida: ${product.name}`}
+          className="absolute right-2 top-11 p-2 transition-opacity lg:opacity-0 lg:group-hover:opacity-100"
+        >
+          <Eye className="h-[18px] w-[18px]" strokeWidth={1.25} />
         </button>
 
         {/* Quick Add */}
@@ -124,7 +134,7 @@ export function ProductCard({
           </div>
         </div>
         <div className="mt-1.5 flex items-center justify-between">
-          <p className="text-[10px] uppercase tracking-[0.15em] text-ink/50">{getCategory(product.category)?.name}</p>
+          <p className="text-[10px] uppercase tracking-[0.15em] text-ink/50">{product.brand ?? getCategory(product.category)?.name}</p>
           <div className="flex gap-1">
             {product.colors.map((c) => (
               <span

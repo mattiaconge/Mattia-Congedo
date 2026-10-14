@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Drawer } from "@/components/ui/Drawer";
 import { InstagramIcon, WhatsAppIcon } from "@/components/ui/SocialIcons";
+import { OpenStatus } from "@/components/ui/OpenStatus";
 import { useShop } from "@/context/ShopContext";
 import { categories } from "@/lib/data/categories";
 import { store, whatsappLink } from "@/lib/data/store";
@@ -45,7 +46,12 @@ export function SideMenu() {
           ))}
         </ul>
 
-        <p className="eyebrow mb-4 mt-12">Categorie</p>
+        <div className="mt-10 border-y border-line py-4">
+          <OpenStatus />
+          <p className="mt-2 text-xs text-ink/50">{store.address.street}, {store.address.city}</p>
+        </div>
+
+        <p className="eyebrow mb-4 mt-10">Categorie</p>
         <ul className="grid grid-cols-2 gap-y-3">
           {categories.map((c) => (
             <li key={c.slug}>

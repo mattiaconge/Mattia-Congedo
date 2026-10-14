@@ -1,7 +1,8 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { FashionImage } from "@/components/ui/FashionImage";
 import { Reveal } from "@/components/ui/Reveal";
-import { InstagramIcon, WhatsAppIcon } from "@/components/ui/SocialIcons";
+import { FacebookIcon, InstagramIcon, WhatsAppIcon } from "@/components/ui/SocialIcons";
+import { OpenStatus } from "@/components/ui/OpenStatus";
 import { boutiqueImage, instagramPosts, mapsEmbedUrl, store, whatsappLink } from "@/lib/data/store";
 
 export function BoutiqueSection() {
@@ -22,10 +23,11 @@ export function BoutiqueSection() {
               la moda che sa essere ricercata e, allo stesso tempo, da vivere ogni giorno.
             </p>
             <p>
-              Selezioniamo collezioni e capi di tendenza stagione dopo stagione, con un occhio attento ai materiali, alla
-              vestibilità e ai dettagli. Ma soprattutto crediamo nella cura del cliente: un consiglio sincero, un abbinamento
-              pensato per te, il piacere di sentirsi a casa.
+              In Via Fiume, a Padova, selezioniamo stagione dopo stagione le ultime tendenze della moda donna ai prezzi migliori,
+              con marchi come Vicolo, Have One, Susy Mix, Kontatto, Imperial e Kaos. Ma soprattutto crediamo nella cura del
+              cliente: un consiglio sincero, un abbinamento pensato per te, il piacere di sentirsi a casa.
             </p>
+            <p>Puoi acquistare in boutique, online o semplicemente scriverci su WhatsApp: ti rispondiamo noi.</p>
           </div>
           <a href={whatsappLink("Ciao Jackie O'! Vorrei qualche informazione.")} target="_blank" rel="noreferrer" className="btn-primary mt-10">
             <WhatsAppIcon className="h-4 w-4" />
@@ -41,7 +43,10 @@ export function BoutiqueSection() {
       {/* Info & mappa */}
       <div className="mt-20 grid border border-line md:mt-32 lg:grid-cols-[1fr_1.4fr]">
         <Reveal className="space-y-10 p-6 md:p-12">
-          <h3 className="font-serif text-3xl md:text-4xl">Vieni a trovarci</h3>
+          <div>
+            <h3 className="font-serif text-3xl md:text-4xl">Vieni a trovarci</h3>
+            <OpenStatus className="mt-3" />
+          </div>
           <InfoRow icon={<MapPin className="h-4 w-4" strokeWidth={1.25} />} title="Indirizzo">
             {store.address.street}
             <br />
@@ -58,7 +63,9 @@ export function BoutiqueSection() {
             </dl>
           </InfoRow>
           <InfoRow icon={<Phone className="h-4 w-4" strokeWidth={1.25} />} title="Contatti">
-            <a href={`tel:${store.phone.replace(/\s/g, "")}`} className="link-underline">{store.phone}</a>
+            <a href={`tel:+39${store.phone.replace(/\s/g, "")}`} className="link-underline">Tel. {store.phone}</a>
+            <br />
+            <a href={whatsappLink()} target="_blank" rel="noreferrer" className="link-underline">WhatsApp {store.whatsappDisplay}</a>
             <br />
             <a href={`mailto:${store.email}`} className="link-underline inline-flex items-center gap-2">
               <Mail className="h-3.5 w-3.5" strokeWidth={1.25} />
@@ -82,9 +89,14 @@ export function BoutiqueSection() {
         <Reveal className="mb-8 flex flex-col items-center gap-3 text-center">
           <InstagramIcon className="h-6 w-6" />
           <p className="font-serif text-3xl md:text-4xl">Seguici su Instagram</p>
-          <a href={store.instagram.url} target="_blank" rel="noreferrer" className="link-underline text-[11px] uppercase tracking-[0.25em]">
-            {store.instagram.handle}
-          </a>
+          <div className="flex items-center gap-6">
+            <a href={store.instagram.url} target="_blank" rel="noreferrer" className="link-underline text-[11px] uppercase tracking-[0.25em]">
+              {store.instagram.handle}
+            </a>
+            <a href={store.facebook} target="_blank" rel="noreferrer" className="link-underline inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.25em]">
+              <FacebookIcon className="h-3.5 w-3.5" /> Facebook
+            </a>
+          </div>
         </Reveal>
         {/* Feed statico: per il feed live collegare la Instagram Graph API (vedi README) */}
         <div className="grid grid-cols-3 gap-1 md:grid-cols-6 md:gap-2">

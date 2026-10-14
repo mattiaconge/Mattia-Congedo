@@ -12,14 +12,21 @@ import {
 import type { CartItem } from "@/lib/types";
 import { getProductById } from "@/lib/data/products";
 
-type Panel = "menu" | "search" | "cart" | null;
+type Panel = "menu" | "search" | "cart" | "filters" | null;
+
+export interface Toast {
+  id: number;
+  message: string;
+  productId?: string;
+}
 
 interface ShopContextValue {
   cart: CartItem[];
   wishlist: string[];
   cartCount: number;
   cartTotal: number;
-  addToCart: (productId: string, size: string) => void;
+  /** openCart=false: mostra solo una notifica senza aprire la bag */
+  addToCart: (productId: string, size: string, openCart?: boolean) => void;
   updateQuantity: (productId: string, size: string, quantity: number) => void;
   removeFromCart: (productId: string, size: string) => void;
   toggleWishlist: (productId: string) => void;
@@ -27,12 +34,20 @@ interface ShopContextValue {
   panel: Panel;
   openPanel: (panel: Exclude<Panel, null>) => void;
   closePanel: () => void;
+  quickView: string | null;
+  openQuickView: (productId: string | null) => void;
+  toasts: Toast[];
+  notify: (message: string, productId?: string) => void;
+  recentlyViewed: string[];
+  markViewed: (productId: string) => void;
+  clearCart: () => void;
 }
 
 const ShopContext = createContext<ShopContextValue | null>(null);
 
 const CART_KEY = "jackieo:cart";
 const WISHLIST_KEY = "jackieo:wishlist";
+const RECENT_KEY = "jackieo:recent";
 
 function readStorage<T>(key: string, fallback: T): T {
   try {
@@ -56,12 +71,20 @@ export function ShopProvider({ children }: { children: ReactNode }) {
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [panel, setPanel] = useState<Panel>(null);
+  const [quickView, setQuickView] = useState<string | null>(null);
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [recentlyViewed, setRecentlyViewed] = useState<string[]>([]);
 
   useEffect(() => {
     setCart(readStorage<CartItem[]>(CART_KEY, []).filter((i) => getProductById(i.productId)));
     setWishlist(readStorage<string[]>(WISHLIST_KEY, []).filter((id) => getProductById(id)));
+    setRecentlyViewed(readStorage<string[]>(RECENT_KEY, []).filter((id) => getProductById(id)));
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (hydrated) writeStorage(RECENT_KEY, recentlyViewed);
+  }, [recentlyViewed, hydrated]);
 
   useEffect(() => {
     if (hydrated) writeStorage(CART_KEY, cart);
@@ -71,16 +94,31 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     if (hydrated) writeStorage(WISHLIST_KEY, wishlist);
   }, [wishlist, hydrated]);
 
-  // Blocca lo scroll della pagina quando un pannello è aperto
+  // Blocca lo scroll della pagina quando un pannello o la vista rapida sono aperti
+  const overlayOpen = Boolean(panel || quickView);
   useEffect(() => {
-    document.body.style.overflow = panel ? "hidden" : "";
-    if (!panel) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setPanel(null);
+    document.body.style.overflow = overlayOpen ? "hidden" : "";
+    if (!overlayOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setPanel(null);
+      setQuickView(null);
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [panel]);
+  }, [overlayOpen]);
 
-  const addToCart = useCallback((productId: string, size: string) => {
+  const notify = useCallback((message: string, productId?: string) => {
+    const id = Date.now() + Math.random();
+    setToasts((prev) => [...prev.slice(-2), { id, message, productId }]);
+    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3200);
+  }, []);
+
+  const markViewed = useCallback((productId: string) => {
+    setRecentlyViewed((prev) => [productId, ...prev.filter((id) => id !== productId)].slice(0, 8));
+  }, []);
+
+  const addToCart = useCallback((productId: string, size: string, openCart = true) => {
     setCart((prev) => {
       const existing = prev.find((i) => i.productId === productId && i.size === size);
       if (existing) {
@@ -88,8 +126,10 @@ export function ShopProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { productId, size, quantity: 1 }];
     });
-    setPanel("cart");
-  }, []);
+    setQuickView(null);
+    if (openCart) setPanel("cart");
+    else notify(`Aggiunto alla bag · taglia ${size}`, productId);
+  }, [notify]);
 
   const removeFromCart = useCallback((productId: string, size: string) => {
     setCart((prev) => prev.filter((i) => !(i.productId === productId && i.size === size)));
@@ -106,10 +146,12 @@ export function ShopProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const toggleWishlist = useCallback((productId: string) => {
+    const removing = wishlist.includes(productId);
+    notify(removing ? "Rimosso dalla wishlist" : "Salvato nella wishlist", productId);
     setWishlist((prev) =>
       prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
     );
-  }, []);
+  }, [wishlist, notify]);
 
   const value = useMemo<ShopContextValue>(() => {
     const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
@@ -130,8 +172,15 @@ export function ShopProvider({ children }: { children: ReactNode }) {
       panel,
       openPanel: setPanel,
       closePanel: () => setPanel(null),
+      quickView,
+      openQuickView: setQuickView,
+      toasts,
+      notify,
+      recentlyViewed,
+      markViewed,
+      clearCart: () => setCart([]),
     };
-  }, [cart, wishlist, panel, addToCart, updateQuantity, removeFromCart, toggleWishlist]);
+  }, [cart, wishlist, panel, quickView, toasts, recentlyViewed, addToCart, updateQuantity, removeFromCart, toggleWishlist, notify, markViewed]);
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
 }

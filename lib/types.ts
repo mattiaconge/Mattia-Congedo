@@ -1,10 +1,12 @@
 export type CategorySlug =
-  | "abiti"
-  | "capispalla"
+  | "abiti-e-tute"
+  | "capi-spalla"
+  | "giacche-e-blazer"
+  | "tailleur"
   | "maglieria"
-  | "accessori"
-  | "borse"
-  | "scarpe";
+  | "jeans"
+  | "gonne"
+  | "accessori";
 
 export type ProductTag = "Nuovo" | "Bestseller" | "Ultimi pezzi" | "Esclusiva";
 
@@ -18,6 +20,8 @@ export interface Product {
   slug: string;
   name: string;
   category: CategorySlug;
+  /** Marchio, solo quando è noto dal nome del prodotto */
+  brand?: string;
   price: number;
   compareAtPrice?: number;
   /** [principale, hover] */

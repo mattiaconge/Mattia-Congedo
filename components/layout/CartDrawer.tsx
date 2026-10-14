@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Minus, Plus } from "lucide-react";
 import { Drawer } from "@/components/ui/Drawer";
 import { FashionImage } from "@/components/ui/FashionImage";
@@ -37,19 +38,14 @@ export function CartDrawer() {
               <span className="text-xs uppercase tracking-[0.2em]">Totale</span>
               <span className="font-serif text-2xl">{formatPrice(cartTotal)}</span>
             </div>
-            <p className="text-[11px] text-ink/50">IVA inclusa. Spese di spedizione calcolate al checkout.</p>
-            <a
-              href={whatsappLink(orderMessage)}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-primary w-full"
-            >
+            <p className="text-[11px] text-ink/50">IVA inclusa. Pagamento e consegna confermati dalla boutique.</p>
+            <Link href="/checkout" onClick={closePanel} className="btn-primary w-full">
+              Procedi all&apos;ordine
+            </Link>
+            <a href={whatsappLink(orderMessage)} target="_blank" rel="noreferrer" className="btn-outline w-full">
               <WhatsAppIcon className="h-4 w-4" />
-              Ordina via WhatsApp
+              Ordine veloce su WhatsApp
             </a>
-            <button disabled className="btn-outline w-full cursor-not-allowed opacity-50" title="Checkout online in arrivo">
-              Checkout online · presto disponibile
-            </button>
           </div>
         )
       }
@@ -71,7 +67,7 @@ export function CartDrawer() {
                 : "Hai diritto alla spedizione gratuita"}
             </p>
             <div className="mt-3 h-px w-full bg-line">
-              <div className="h-px bg-gold transition-all duration-700" style={{ width: `${progress}%` }} />
+              <motion.div className="h-px bg-gold" initial={false} animate={{ width: `${progress}%` }} transition={{ duration: 0.7 }} />
             </div>
           </div>
           <ul className="divide-y divide-line">
@@ -79,7 +75,13 @@ export function CartDrawer() {
               const p = getProductById(item.productId);
               if (!p) return null;
               return (
-                <li key={`${item.productId}-${item.size}`} className="flex gap-4 px-5 py-6 md:px-8">
+                <motion.li
+                  layout
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  key={`${item.productId}-${item.size}`}
+                  className="flex gap-4 px-5 py-6 md:px-8"
+                >
                   <Link href={`/prodotto/${p.slug}`} onClick={closePanel} className="relative aspect-[3/4] w-24 shrink-0 overflow-hidden bg-mist">
                     <FashionImage src={p.images[0]} alt={p.name} fill sizes="96px" className="object-cover" />
                   </Link>
@@ -115,7 +117,7 @@ export function CartDrawer() {
                       </button>
                     </div>
                   </div>
-                </li>
+                </motion.li>
               );
             })}
           </ul>

@@ -1,30 +1,42 @@
 import { unsplash } from "@/lib/format";
 
 /**
- * Dati della boutique.
- * ⚠️ Indirizzo, telefono, WhatsApp, email e handle social sono SEGNAPOSTO:
- * sostituirli con i dati reali del negozio prima della pubblicazione.
+ * Dati reali della boutique (fonti: jackieoshop.it, Instagram @jackie_o_padova, Facebook).
+ * ⚠️ Gli ORARI sono discordanti tra le fonti online (Cylex 08/2025, Nuova Opinione):
+ * qui sono riportati quelli più recenti, da confermare con il negozio.
  */
 export const store = {
   name: "Jackie O' Padova",
+  legalName: "NEW MODA srl",
   address: {
-    street: "Via San Fermo, 00",
-    city: "35137 Padova (PD)",
+    street: "Via Fiume, 4",
+    city: "35139 Padova (PD)",
   },
-  mapsQuery: "Jackie O' Padova",
-  phone: "+39 049 000 0000",
+  mapsQuery: "Jackie O', Via Fiume 4, 35139 Padova",
+  phone: "049 876 0470",
   /** Solo cifre, con prefisso internazionale, per i link wa.me */
-  whatsapp: "390000000000",
-  email: "info@jackieopadova.it",
-  instagram: { handle: "@jackieo_padova", url: "https://www.instagram.com/" },
-  facebook: "https://www.facebook.com/",
-  tiktok: "https://www.tiktok.com/",
+  whatsapp: "393480569100",
+  whatsappDisplay: "348 056 9100",
+  email: "shop@jackie-o.it",
+  website: "https://www.jackieoshop.it",
+  instagram: { handle: "@jackie_o_padova", url: "https://www.instagram.com/jackie_o_padova/" },
+  facebook: "https://www.facebook.com/Jackieopadova/",
+  /** Orari per giorno della settimana (0 = domenica), fasce "HH:MM-HH:MM" */
+  schedule: {
+    0: ["15:30-19:30"],
+    1: ["15:00-19:30"],
+    2: ["09:30-19:30"],
+    3: ["09:30-19:30"],
+    4: ["09:30-19:30"],
+    5: ["09:30-19:30"],
+    6: ["09:30-19:30"],
+  } as Record<number, string[]>,
   hours: [
-    { days: "Lunedì", time: "15:30 – 19:30" },
-    { days: "Martedì – Sabato", time: "10:00 – 13:00 · 15:30 – 19:30" },
-    { days: "Domenica", time: "Chiuso" },
+    { days: "Lunedì", time: "15:00 – 19:30" },
+    { days: "Martedì – Sabato", time: "09:30 – 19:30" },
+    { days: "Domenica", time: "15:30 – 19:30" },
   ],
-  freeShippingThreshold: 150,
+  freeShippingThreshold: 90,
 };
 
 export const whatsappLink = (message?: string) =>
@@ -44,20 +56,20 @@ export const heroSlides = [
   },
   {
     id: "h2",
-    eyebrow: "Capispalla",
+    eyebrow: "Capi spalla & Blazer",
     title: "Tailoring Moderno",
-    subtitle: "Cappotti sartoriali e trench iconici per la stagione fredda.",
+    subtitle: "Giacche, piumini e tailleur per la stagione fredda.",
     image: unsplash("1487222477894-8943e31ef7b2", 2000),
-    cta: { label: "Shop Capispalla", href: "/collezione?categoria=capispalla" },
+    cta: { label: "Shop Capi spalla", href: "/collezione?categoria=capi-spalla" },
     secondary: { label: "Nuovi Arrivi", href: "/#nuovi-arrivi" },
   },
   {
     id: "h3",
-    eyebrow: "Evening edit",
-    title: "After Dark",
-    subtitle: "Raso, plissé e dettagli dorati per le sere che contano.",
+    eyebrow: "Vicolo · Have One · Kaos",
+    title: "I Nostri Brand",
+    subtitle: "Le collezioni dei marchi che selezioniamo per te, stagione dopo stagione.",
     image: unsplash("1509631179647-0177331693ae", 2000),
-    cta: { label: "Shop Abiti", href: "/collezione?categoria=abiti" },
+    cta: { label: "Shop Abiti e tute", href: "/collezione?categoria=abiti-e-tute" },
     secondary: { label: "Sfoglia i Trend", href: "/#trend" },
   },
 ];
@@ -68,18 +80,18 @@ export const trendStories = [
     number: "01",
     title: "Quiet Luxury",
     kicker: "Trend della stagione",
-    text: "Cashmere, lana e pelle in una palette di avorio, cammello e tortora. Il lusso non si mostra: si percepisce nei materiali e nei tagli perfetti.",
+    text: "Maglieria morbida, capi spalla essenziali e una palette di avorio, cammello e tortora. Il lusso non si mostra: si percepisce nei tagli e negli abbinamenti.",
     image: unsplash("1503342217505-b0a15ec3261c", 1400),
-    productIds: ["p02", "p03", "p04"],
+    productIds: ["p03", "p09", "p07"],
   },
   {
     id: "after-dark",
     number: "02",
-    title: "Black Tie Contemporaneo",
+    title: "Power Dressing",
     kicker: "Style guide",
-    text: "Il nero totale si fa scultoreo: plissé in movimento, vernice lucida e un tocco d'oro. Per serate in cui ogni dettaglio conta.",
+    text: "Il tailleur rosso, la giacca strutturata e il denim giusto: il guardaroba di chi vuole lasciare il segno, dall'ufficio all'aperitivo.",
     image: unsplash("1539109136881-3be0616acf4b", 1400),
-    productIds: ["p08", "p05", "p06"],
+    productIds: ["p01", "p02", "p08"],
   },
 ];
 
@@ -93,3 +105,32 @@ export const instagramPosts = [
   unsplash("1529139574466-a303027c1d8b", 600),
   unsplash("1490481651871-ab68de25d43d", 600),
 ];
+
+const toMinutes = (t: string) => {
+  const [h, m] = t.split(":").map(Number);
+  return h * 60 + m;
+};
+
+/** Stato apertura in tempo reale (ora locale del visitatore, pensata per Padova) */
+export function getOpenStatus(now = new Date()) {
+  const minutes = now.getHours() * 60 + now.getMinutes();
+  const today = store.schedule[now.getDay()] ?? [];
+  for (const slot of today) {
+    const [open, close] = slot.split("-");
+    if (minutes >= toMinutes(open) && minutes < toMinutes(close)) {
+      return { open: true, label: `Aperto ora · chiude alle ${close}` };
+    }
+    if (minutes < toMinutes(open)) {
+      return { open: false, label: `Chiuso · apre oggi alle ${open}` };
+    }
+  }
+  for (let i = 1; i <= 7; i++) {
+    const day = (now.getDay() + i) % 7;
+    const first = store.schedule[day]?.[0];
+    if (first) {
+      const names = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
+      return { open: false, label: `Chiuso · apre ${i === 1 ? "domani" : names[day]} alle ${first.split("-")[0]}` };
+    }
+  }
+  return { open: false, label: "Chiuso" };
+}
