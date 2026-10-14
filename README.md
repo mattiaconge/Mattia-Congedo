@@ -15,8 +15,10 @@ Sito vetrina / e-commerce per la boutique di abbigliamento **Jackie O' Padova**:
 ```bash
 npm install
 npm run dev        # http://localhost:3000
-npm run build && npm start
+npm run build      # esporta il sito statico nella cartella out/
 ```
+
+Il progetto usa `output: "export"`: `out/` contiene HTML/CSS/JS statici, caricabili su qualsiasi hosting statico. Per pubblicarlo in una sottocartella (es. GitHub Pages) impostare `BASE_PATH=/nome-repo` prima della build.
 
 ## Struttura
 

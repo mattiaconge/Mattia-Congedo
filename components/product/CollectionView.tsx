@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ProductCard } from "@/components/product/ProductCard";
-import { categories, getCategory } from "@/lib/data/categories";
+import { categories, getCategory, isCategorySlug } from "@/lib/data/categories";
 import { products } from "@/lib/data/products";
 import type { CategorySlug } from "@/lib/types";
 
@@ -17,7 +18,9 @@ const sortLabels: Record<Sort, string> = {
   "prezzo-desc": "Prezzo decrescente",
 };
 
-export function CollectionView({ initialCategory }: { initialCategory: Filter }) {
+export function CollectionView() {
+  const param = useSearchParams().get("categoria") ?? "";
+  const initialCategory: Filter = isCategorySlug(param) ? param : "tutti";
   const [filter, setFilter] = useState<Filter>(initialCategory);
   const [sort, setSort] = useState<Sort>("rilevanza");
   const [columns, setColumns] = useState<2 | 4>(4);
@@ -27,7 +30,9 @@ export function CollectionView({ initialCategory }: { initialCategory: Filter })
 
   const selectFilter = (value: Filter) => {
     setFilter(value);
-    const url = value === "tutti" ? "/collezione" : `/collezione?categoria=${value}`;
+    const url = new URL(window.location.href);
+    if (value === "tutti") url.searchParams.delete("categoria");
+    else url.searchParams.set("categoria", value);
     window.history.replaceState(null, "", url);
   };
 
